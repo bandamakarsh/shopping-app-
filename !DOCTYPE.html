@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ride-Hailing App - Vehicle Factory</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .app {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 400px;
+      text-align: center;
+    }
+    select, button {
+      padding: 10px;
+      margin: 10px;
+      width: 80%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      background: #dee2e6;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h2>Vehicle Factory</h2>
+    <select id="vehicleType">
+      <option value="bike">Bike</option>
+      <option value="auto">Auto</option>
+      <option value="car">Car</option>
+    </select>
+    <br>
+    <button onclick="getVehicleDetails()">Get Vehicle Details</button>
+    <div class="output" id="output"></div>
+  </div>
+
+  <script>
+    // Abstract Product
+    class Vehicle {
+      constructor(type, driverName, rating) {
+        this.type = type;
+        this.driverName = driverName;
+        this.rating = rating;
+      }
+      getDetails() {
+        return `
+          Vehicle Type: ${this.type}<br>
+          Driver: ${this.driverName}<br>
+          Rating: ⭐${this.rating}
+        `;
+      }
+    }
+
+    // Concrete Products
+    class Bike extends Vehicle {
+      constructor() {
+        super("Bike", "Ravi Kumar", 4.5);
+      }
+    }
+    class Auto extends Vehicle {
+      constructor() {
+        super("Auto", "Suresh Reddy", 4.2);
+      }
+    }
+    class Car extends Vehicle {
+      constructor() {
+        super("Car", "Anil Sharma", 4.8);
+      }
+    }
+
+    // Abstract Factory
+    class VehicleFactory {
+      static createVehicle(type) {
+        switch (type) {
+          case "bike": return new Bike();
+          case "auto": return new Auto();
+          case "car": return new Car();
+          default: throw new Error("Invalid Vehicle Type");
+        }
+      }
+    }
+
+    // UI Logic
+    function getVehicleDetails() {
+      const vehicleType = document.getElementById("vehicleType").value;
+      const vehicle = VehicleFactory.createVehicle(vehicleType);
+      document.getElementById("output").innerHTML = `
+        <strong>${vehicleType.toUpperCase()} DETAILS:</strong><br><br>
+        ${vehicle.getDetails()}
+      `;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Banking App - Loan Factory</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .app {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 400px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+    select, button {
+      padding: 10px;
+      margin: 10px;
+      width: 80%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background: #3498db;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      background: #ecf0f1;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h2>Bank Loan Factory</h2>
+    <select id="loanType">
+      <option value="home">Home Loan</option>
+      <option value="car">Car Loan</option>
+      <option value="education">Education Loan</option>
+    </select>
+    <br>
+    <button onclick="getLoanDetails()">Get Loan Details</button>
+    <div class="output" id="output"></div>
+  </div>
+
+  <script>
+    // ----- Abstract Product -----
+    class Loan {
+      constructor(amount, interestRate, tenure) {
+        this.amount = amount;
+        this.interestRate = interestRate;
+        this.tenure = tenure;
+      }
+      getDetails() {
+        return `
+          Loan Amount: ₹${this.amount}<br>
+          Interest Rate: ${this.interestRate}%<br>
+          Tenure: ${this.tenure} years
+        `;
+      }
+    }
+
+    // ----- Concrete Products -----
+    class HomeLoan extends Loan {
+      constructor() {
+        super(5000000, 7.5, 20);
+      }
+    }
+
+    class CarLoan extends Loan {
+      constructor() {
+        super(1000000, 9.0, 7);
+      }
+    }
+
+    class EducationLoan extends Loan {
+      constructor() {
+        super(2000000, 5.0, 10);
+      }
+    }
+
+    // ----- Abstract Factory -----
+    class LoanFactory {
+      static createLoan(type) {
+        switch (type) {
+          case "home": return new HomeLoan();
+          case "car": return new CarLoan();
+          case "education": return new EducationLoan();
+          default: throw new Error("Invalid Loan Type");
+        }
+      }
+    }
+
+    // ----- UI Logic -----
+    function getLoanDetails() {
+      const loanType = document.getElementById("loanType").value;
+      const loan = LoanFactory.createLoan(loanType);
+      document.getElementById("output").innerHTML = `
+        <strong>${loanType.toUpperCase()} LOAN DETAILS:</strong><br><br>
+        ${loan.getDetails()}
+      `;
+    }
+  </script>
+</body>
+</html>

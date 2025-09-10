@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>E-commerce App - Shipping Factory</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .app {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 400px;
+      text-align: center;
+    }
+    select, button {
+      padding: 10px;
+      margin: 10px;
+      width: 80%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #28a745;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #218838;
+    }
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      background: #e9ecef;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h2>Shipping Factory</h2>
+    <select id="shippingType">
+      <option value="standard">Standard Shipping</option>
+      <option value="express">Express Shipping</option>
+      <option value="international">International Shipping</option>
+    </select>
+    <br>
+    <button onclick="getShippingDetails()">Get Shipping Details</button>
+    <div class="output" id="output"></div>
+  </div>
+
+  <script>
+    // Abstract Product
+    class Shipping {
+      constructor(cost, deliveryTime) {
+        this.cost = cost;
+        this.deliveryTime = deliveryTime;
+      }
+      getDetails() {
+        return `
+          Shipping Cost: ₹${this.cost}<br>
+          Delivery Time: ${this.deliveryTime}
+        `;
+      }
+    }
+
+    // Concrete Products
+    class StandardShipping extends Shipping {
+      constructor() {
+        super(100, "5-7 days");
+      }
+    }
+    class ExpressShipping extends Shipping {
+      constructor() {
+        super(250, "2-3 days");
+      }
+    }
+    class InternationalShipping extends Shipping {
+      constructor() {
+        super(1000, "10-15 days");
+      }
+    }
+
+    // Abstract Factory
+    class ShippingFactory {
+      static createShipping(type) {
+        switch (type) {
+          case "standard": return new StandardShipping();
+          case "express": return new ExpressShipping();
+          case "international": return new InternationalShipping();
+          default: throw new Error("Invalid Shipping Type");
+        }
+      }
+    }
+
+    // UI Logic
+    function getShippingDetails() {
+      const shippingType = document.getElementById("shippingType").value;
+      const shipping = ShippingFactory.createShipping(shippingType);
+      document.getElementById("output").innerHTML = `
+        <strong>${shippingType.toUpperCase()} DETAILS:</strong><br><br>
+        ${shipping.getDetails()}
+      `;
+    }
+  </script>
+</body>
+</html>
